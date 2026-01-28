@@ -1,45 +1,58 @@
 <script setup>
-import { ref } from "vue";
+import { ref, computed } from "vue";
 const newTodo = ref("");
 const todos = ref([]);
 
-function addTodo(){
+function addTodo() {
   const value = newTodo.value.trim();
-  if(!value) return;
+  if (!value) return;
 
   todos.value.push({
     id: Date.now(),
     text: value,
-    done: false
+    done: false,
   });
 
   newTodo.value = "";
 }
+
+function deleteTasks(todo) {
+  if (!todo.done) {
+    alert("Please complete the task before deleting it !");
+    return;
+  }
+
+  todos.value = todos.value.filter((t) => t.id !== todo.id);
+}
+
+const remainingTasks = computed(() => {
+  return todos.value.filter((todo) => !todo.done).length;
+});
+
+const tasksStatus = computed(() => {
+  if (!todos.value.length) return "";
+
+  return remainingTasks.value === 0 ? "All tasks done 🎉" : `${remainingTasks.value} tasks left`;
+});
 </script>
 
 <template>
-
   <h1>Todo App</h1>
-  <input 
-  type="text" 
-  placeholder="Type a todo...." 
-  v-model="newTodo" 
-  @keyup.enter="addTodo" 
-  />
+  <input type="text" placeholder="Type a todo...." v-model="newTodo" @keyup.enter="addTodo" />
 
   <p>You typed: {{ newTodo }}</p>
 
-  <button @click="addTodo">
-    Add Todo
-  </button>
+  <button @click="addTodo">Add Todo</button>
 
   <ul>
     <p class="list-title">Here is the list of todos:</p>
+    <p>{{ tasksStatus }}</p>
     <li v-for="todo in todos" :key="todo.id">
-      <input type="checkbox" v-model="todo.done">
-      <span :class="{ done: todo.done}">
+      <input type="checkbox" v-model="todo.done" />
+      <span :class="{ done: todo.done }">
         {{ todo.text }}
       </span>
+      <button @click="deleteTasks(todo)">❌</button>
     </li>
   </ul>
 
@@ -47,29 +60,29 @@ function addTodo(){
 </template>
 
 <style scoped>
-h1{
+h1 {
   color: cornflowerblue;
-  font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+  font-family: "Franklin Gothic Medium", "Arial Narrow", Arial, sans-serif;
   text-align: center;
   gap: 10px;
 }
 
-input[type="text"]{
+input[type="text"] {
   padding: 15px;
   font-size: 14px;
-  width:300px;
+  width: 300px;
   margin: 10px auto;
   display: block;
 }
 
-p{
+p {
   text-align: center;
   font-size: medium;
   text-decoration-thickness: 8px;
 }
 
-button{
-  padding: 10px 15px;
+button {
+  padding: 5px 10px;
   font-size: 14px;
   cursor: pointer;
   background-color: cornflowerblue;
@@ -81,26 +94,26 @@ button{
   margin: 10px auto;
 }
 
-ul{
+ul {
   list-style-type: none;
   padding: 0;
   max-width: 400px;
   margin: 20px auto;
-}
-
-.list-title{
-  font-weight: bold;
   text-align: center;
 }
 
-li{
-  font-size: medium;
+.list-title {
+  font-weight: bold;
+}
+
+li {
+  font-size: large;
   margin: 10px 0;
 }
 
-.done{
+.done {
   text-decoration: line-through;
-  color: gray;  
+  color: gray;
   opacity: 0.6;
 }
 </style>
