@@ -1,11 +1,16 @@
 <script setup>
-import { ref, computed } from "vue";
+import { ref, computed, watch } from "vue";
 const newTodo = ref("");
 const todos = ref([]);
+const warningMsge = ref("");
 
 function addTodo() {
   const value = newTodo.value.trim();
-  if (!value) return;
+  if (!value) {
+    return (warningMsge.value = "First enter a task to add into the list !");
+  }
+
+  warningMsge.value = "";
 
   todos.value.push({
     id: Date.now(),
@@ -16,14 +21,29 @@ function addTodo() {
   newTodo.value = "";
 }
 
+watch(newTodo, (value) => {
+  if (value.trim()) {
+    warningMsge.value = "";
+  }
+});
+
 function deleteTasks(todo) {
   if (!todo.done) {
-    alert("Please complete the task before deleting it !");
+    warningMsge.value = "Please complete the task before deleting it !";
     return;
   }
 
+  warningMsge.value = "";
   todos.value = todos.value.filter((t) => t.id !== todo.id);
 }
+
+watch(
+  todos,
+  () => {
+    warningMsge.value = "";
+  },
+  { deep: true },
+);
 
 const remainingTasks = computed(() => {
   return todos.value.filter((todo) => !todo.done).length;
@@ -47,6 +67,11 @@ const tasksStatus = computed(() => {
   <ul>
     <p class="list-title">Here is the list of todos:</p>
     <p>{{ tasksStatus }}</p>
+
+    <p v-if="warningMsge" class="warning">
+      {{ warningMsge }}
+    </p>
+
     <li v-for="todo in todos" :key="todo.id">
       <input type="checkbox" v-model="todo.done" />
       <span :class="{ done: todo.done }">
@@ -115,5 +140,11 @@ li {
   text-decoration: line-through;
   color: gray;
   opacity: 0.6;
+}
+
+.warning {
+  text-align: center;
+  font-weight: 500;
+  color: #c0392b;
 }
 </style>
