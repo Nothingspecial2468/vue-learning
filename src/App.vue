@@ -1,5 +1,6 @@
 <script setup>
 import { ref, computed, watch } from "vue";
+import todoImg from "@/assets/todo.png";
 const newTodo = ref("");
 const todos = ref([]);
 const warningMsge = ref("");
@@ -58,6 +59,7 @@ const tasksStatus = computed(() => {
 
 <template>
   <h1>Todo App</h1>
+  <img :src="todoImg" alt="ToDo Icon" class="todo-img" />
   <input type="text" placeholder="Type a todo...." v-model="newTodo" @keyup.enter="addTodo" />
 
   <p>You typed: {{ newTodo }}</p>
@@ -90,6 +92,13 @@ h1 {
   font-family: "Franklin Gothic Medium", "Arial Narrow", Arial, sans-serif;
   text-align: center;
   gap: 10px;
+}
+
+.todo-img {
+  width: 100px;
+  height: inherit;
+  margin: 10px auto 15px auto;
+  display: block;
 }
 
 input[type="text"] {
