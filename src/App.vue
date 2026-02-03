@@ -58,35 +58,48 @@ const tasksStatus = computed(() => {
 </script>
 
 <template>
-  <h1>Todo App</h1>
-  <img :src="todoImg" alt="ToDo Icon" class="todo-img" />
-  <input type="text" placeholder="Type a todo...." v-model="newTodo" @keyup.enter="addTodo" />
+  <div class="app-container">
+    <h1>Todo App</h1>
+    <img :src="todoImg" alt="ToDo Icon" class="todo-img" />
+    <input type="text" placeholder="Type a todo...." v-model="newTodo" @keyup.enter="addTodo" />
 
-  <p>You typed: {{ newTodo }}</p>
+    <p>You typed: {{ newTodo }}</p>
 
-  <button @click="addTodo">Add Todo</button>
+    <button @click="addTodo">Add Todo</button>
 
-  <ul>
-    <p class="list-title">Here is the list of todos:</p>
-    <p>{{ tasksStatus }}</p>
+    <ul>
+      <p class="list-title">Here is the list of todos:</p>
+      <p>{{ tasksStatus }}</p>
 
-    <p v-if="warningMsge" class="warning">
-      {{ warningMsge }}
-    </p>
+      <p v-if="warningMsge" class="warning">
+        {{ warningMsge }}
+      </p>
 
-    <li v-for="todo in todos" :key="todo.id">
-      <input type="checkbox" v-model="todo.done" />
-      <span :class="{ done: todo.done }">
-        {{ todo.text }}
-      </span>
-      <button @click="deleteTasks(todo)">❌</button>
-    </li>
-  </ul>
-
+      <li v-for="todo in todos" :key="todo.id">
+        <input type="checkbox" v-model="todo.done" />
+        <span :class="{ done: todo.done }">
+          {{ todo.text }}
+        </span>
+        <button @click="deleteTasks(todo)">❌</button>
+      </li>
+    </ul>
+  </div>
   <!-- <pre>{{ todos }}</pre> -->
 </template>
 
 <style scoped>
+.app-container {
+  max-width: 420px;
+  margin: 60px auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  background: #1e1e1e;
+  padding: 30px;
+  border-radius: 13px;
+}
+
 h1 {
   color: cornflowerblue;
   font-family: "Franklin Gothic Medium", "Arial Narrow", Arial, sans-serif;
@@ -96,9 +109,6 @@ h1 {
 
 .todo-img {
   width: 100px;
-  height: inherit;
-  margin: 10px auto 15px auto;
-  display: block;
 }
 
 input[type="text"] {
